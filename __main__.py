@@ -15,7 +15,7 @@ def growth(data):
     avg = []
     cum = 0
     for (year, week), count in data:
-        if year > 2012:
+        if year > 2012 and week > 1:
             p = 100. * float(count) / cum
             yield (year, week), p
         cum += count
@@ -23,7 +23,9 @@ def growth(data):
 def cumulative(data):
     cum = 0
     for (year, week), count in data:
+        if year > 2012:
             t = datetime(year, 1, 1) + timedelta(weeks = week)     
+            print '%s %s' % (t, count)
             yield t.strftime('%Y-%m-%d'), cum
             cum += count
 
@@ -33,6 +35,8 @@ def new_users(data):
             if year > 2012:
                 yield datetime(year, 1, 1) + timedelta(weeks = week), count
     for month, counts in groupby(monthly(), lambda x: x[0]):
+        counts = list(counts)
+        print counts
         yield month.strftime('%B'), sum(count for month, count in counts)
             
 def users(profiles):
@@ -46,7 +50,7 @@ def users(profiles):
     gdata = dict(growth(data))
     yield {'type': 'bar',
            'label': 'New Users',
-           'size': (12, 4),
+           'size': (5, 4),
            'data': list(new_users(data))}
     yield {'type': 'bar',
            'label': 'Week-to-week growth',
@@ -57,7 +61,7 @@ def users(profiles):
            'label': 'Average weekly growth',
            'data': {'head': '%.2f%%' % (sum(gdata.values()) / len(gdata))}}
     yield {'type': 'line',
-           'size': (12, 4),
+           'size': (6, 4),
            'label': 'Total number of users',
            'data': list(cumulative(data))}
     
