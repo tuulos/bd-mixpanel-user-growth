@@ -26,7 +26,7 @@ def cumulative(data):
         if year > 2012:
             t = datetime(year, 1, 1) + timedelta(weeks = week)     
             yield t.strftime('%Y-%m-%d'), cum
-        cum += count
+            cum += count
         
 def users(profiles):
     weeks = Counter()
