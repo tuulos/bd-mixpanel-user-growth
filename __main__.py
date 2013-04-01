@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 WINDOW = 48
 text = {}
 
-set_theme('playground')
+set_theme('purple')
 
 def date(hour):
     return strftime('%B %d, %Y')
