@@ -1,5 +1,5 @@
 from bitdeli import Profiles, set_theme, Description, Title
-from itertools import chain
+from itertools import chain, groupby
 from collections import Counter
 from datetime import datetime, timedelta
 
@@ -23,11 +23,18 @@ def growth(data):
 def cumulative(data):
     cum = 0
     for (year, week), count in data:
-        if (year, week) > (2012, 50):
             t = datetime(year, 1, 1) + timedelta(weeks = week)     
             yield t.strftime('%Y-%m-%d'), cum
             cum += count
-        
+
+def new_users(data):
+    def monthly():
+        for (year, week), count in data:
+            if year > 2012:
+                yield datetime(year, 1, 1) + timedelta(weeks = week), count
+    for month, counts in groupby(monthly(), lambda x: x[0]):
+        yield month.strftime('%B'), sum(count for month, count in counts)
+            
 def users(profiles):
     weeks = Counter()
     for profile in profiles:
@@ -40,7 +47,7 @@ def users(profiles):
     yield {'type': 'bar',
            'label': 'New Users',
            'size': (12, 4),
-           'data': filter(lambda x: x[0][0] > 2012, data)}
+           'data': list(new_users(data))}
     yield {'type': 'bar',
            'label': 'Week-to-week growth',
            'size': (10, 4),
