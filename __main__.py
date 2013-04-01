@@ -23,7 +23,7 @@ def growth(data):
 def cumulative(data):
     cum = 0
     for (year, week), count in data:
-        if year > 2012:
+        if (year, week) > (2012, 50):
             t = datetime(year, 1, 1) + timedelta(weeks = week)     
             yield t.strftime('%Y-%m-%d'), cum
             cum += count
@@ -40,7 +40,7 @@ def users(profiles):
     yield {'type': 'bar',
            'label': 'New Users',
            'size': (12, 4),
-           'data': data}
+           'data': filter(lambda x: x[0][0] > 2012, data)}
     yield {'type': 'bar',
            'label': 'Week-to-week growth',
            'size': (10, 4),
