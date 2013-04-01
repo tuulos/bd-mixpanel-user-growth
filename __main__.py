@@ -15,7 +15,7 @@ def growth(data):
     avg = []
     cum = 0
     for (year, week), count in data:
-        if year > 2012 and week > 1:
+        if year > 2012:
             p = 100. * float(count) / cum
             yield (year, week), p
         cum += count
