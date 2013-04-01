@@ -27,7 +27,7 @@ def cumulative(data):
             t = datetime(year, 1, 1) + timedelta(weeks = week)     
             print '%s %s' % (t, count)
             yield t.strftime('%Y-%m-%d'), cum
-            cum += count
+        cum += count
 
 def new_users(data):
     def monthly():
