@@ -23,8 +23,9 @@ def growth(data):
 def cumulative(data):
     cum = 0
     for (year, week), count in data:
-        t = datetime(year, 1, 1) + timedelta(weeks = week)     
-        yield t.strftime('%Y-%m-%d'), cum
+        if year > 2012:
+            t = datetime(year, 1, 1) + timedelta(weeks = week)     
+            yield t.strftime('%Y-%m-%d'), cum
         cum += count
         
 def users(profiles):
