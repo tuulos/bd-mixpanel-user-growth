@@ -23,9 +23,8 @@ def growth(data):
 def cumulative(data):
     cum = 0
     for (year, week), count in data:
-        if year > 2012:
+        if True:
             t = datetime(year, 1, 1) + timedelta(weeks = week)     
-            print '%s %s' % (t, count)
             yield t.strftime('%Y-%m-%d'), cum
         cum += count
 
