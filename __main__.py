@@ -11,30 +11,46 @@ set_theme('playground')
 def date(hour):
     return strftime('%B %d, %Y')
 
-def cumulative(data, cum):
-    d = datetime(2013, 1, 1)
+def growth(data):
+    avg = []
+    cum = 0
     for (year, week), count in data:
-        t = d + timedelta(weeks = week)
+        if year > 2012:
+            p = 100. * float(count) / cum
+            yield (year, week), p
         cum += count
+    
+def cumulative(data):
+    cum = 0
+    for (year, week), count in data:
+        t = datetime(year, 1, 1) + timedelta(weeks = week)     
         yield t.strftime('%Y-%m-%d'), cum
-
+        cum += count
+        
 def users(profiles):
     weeks = Counter()
-    cum = 0
     for profile in profiles:
         if 'email' in profile['properties']:
             hour, count = min(chain.from_iterable(profile['events'].itervalues()))
             year, week, day = datetime.utcfromtimestamp(hour * 3600).isocalendar()
-            if year == 2013:
-                weeks[(year, week)] += 1
-            else:
-                cum +=1
+            weeks[(year, week)] += 1
     data = sorted(weeks.items())[:-1]
+    gdata = dict(growth(data))
     yield {'type': 'bar',
+           'label': 'New Users',
            'size': (12, 4),
            'data': data}
+    yield {'type': 'bar',
+           'label': 'Week-to-week growth',
+           'size': (10, 4),
+           'data': gdata}
+    yield {'type': 'text',
+           'size': (2, 2),
+           'label': 'Average weekly growth',
+           'data': {'head': '%.2f%%' % (sum(gdata.values()) / len(gdata))}}
     yield {'type': 'line',
            'size': (12, 4),
-           'data': list(cumulative(data, cum))}
+           'label': 'Total number of users',
+           'data': list(cumulative(data))}
     
 Profiles().map(users).show()
