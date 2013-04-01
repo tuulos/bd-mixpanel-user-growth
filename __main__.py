@@ -17,7 +17,8 @@ def users(profiles):
         if 'email' in profile['properties']:
             hour, count = min(chain.from_iterable(profile['events'].itervalues()))
             year, week, day = datetime.utcfromtimestamp(hour * 3600).isocalendar()
-            weeks['%s-%s' % (year, week)] += 1
+            if year == 2013:
+                weeks['%s-%s' % (year, week)] += 1
     data = sorted(weeks.items())
     yield {'type': 'bar',
            'size': (12, 4),
